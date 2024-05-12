@@ -1,0 +1,5 @@
+name: MineWars
+author: Moritz Penteker
+version: '${project.version}'
+main: com.teqless.minewars.MineWars
+api-version: '1.20'
