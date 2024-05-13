@@ -1,7 +1,7 @@
-package com.teqless.minewars.location;
+package com.teqless.minewar.location;
 
-import com.teqless.minewars.teams.Team;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.teams.Team;
+import com.teqless.minewar.teams.User;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

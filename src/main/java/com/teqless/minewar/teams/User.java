@@ -1,9 +1,9 @@
-package com.teqless.minewars.teams;
+package com.teqless.minewar.teams;
 
-import com.teqless.minewars.game.Messages;
-import com.teqless.minewars.items.ItemBuilder;
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameHandler;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.Messages;
+import com.teqless.minewar.items.ItemBuilder;
+import com.teqless.minewar.game.GameHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -24,7 +24,6 @@ public class User {
     public User(UUID uuid) {
         this.uuid = uuid;
     }
-
 
     public Player getPlayer() {
         return Bukkit.getPlayer(uuid);
@@ -70,11 +69,11 @@ public class User {
 
         isSpectating = true;
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
 
         for (Player player : Bukkit.getOnlinePlayers()) {
             if(!handler.getUser(player.getUniqueId()).isSpectating()) {
-                player.hidePlayer(MineWars.getInstance(), getPlayer());
+                player.hidePlayer(MineWar.getInstance(), getPlayer());
             }
         }
 
@@ -90,7 +89,7 @@ public class User {
         player.setAllowFlight(false);
 
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            otherPlayer.showPlayer(MineWars.getInstance(), player);
+            otherPlayer.showPlayer(MineWar.getInstance(), player);
         }
 
     }

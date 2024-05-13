@@ -1,15 +1,13 @@
-package com.teqless.minewars.game;
+package com.teqless.minewar.game;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.teams.User;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.Objects;
-
 public class Messages {
 
-    private static final String prefix = "§cMine§8§lWars §7» ";
+    private static final String prefix = "§cMine§8§lWar §7» ";
 
     //Accent color, abbreviated for format
     private static final String aC = "§c";
@@ -38,6 +36,10 @@ public class Messages {
     public static final String KILL_MESSAGE = "You killed "+ aC + "%victim" + r + ".";
     public static final String DEATH_MESSAGE = "You have been killed by %killer.";
     public static final String RECEIVE_POINTS_MESSAGE = "You received "+ aC + "%points" + r + " points.";
+    public static final String NO_PERMISSION = aC + "You don't have permission to do this.";
+    public static final String SYNTAX_ERROR = aC + "Invalid syntax. Please look up the correct way to use this " +
+            "command by typing /[command] help";
+
 
     public static void sendMessage(User user, String message, boolean broadcast) {
 
@@ -45,18 +47,21 @@ public class Messages {
 
         //Replace placeholders
         message = prefix + message
-                .replace("%team", user.getTeam().getName() + r)
                 .replace("%player", aC + player.getName()+ r)
                 .replace("%kills", aC + user.getKills()+ r)
-                .replace("%seconds", aC + MineWars.getHandler().getCurrentCount() + r)
-                .replace("%winner", aC + MineWars.getHandler().getWinner() + r
+                .replace("%seconds", aC + MineWar.getHandler().getCurrentCount() + r)
+                .replace("%winner", aC + MineWar.getHandler().getWinner() + r
                 );
+
+        if(user.getTeam() != null) {
+            message = message.replace("%team", user.getTeam().getName() + r);
+        }
 
         if(player.getKiller() != null) {
             message = message.replace("%killer", aC + player.getKiller().getName() + r);
         }
 
-        if(MineWars.getHandler().getCurrentCount() == 1) {
+        if(MineWar.getHandler().getCurrentCount() == 1) {
             message = message.replace("seconds", "second");
         }
 
@@ -78,13 +83,13 @@ public class Messages {
 
         //Replace placeholders
         message = prefix + message
-                .replace("%seconds", aC + MineWars.getHandler().getCurrentCount() + r)
-                .replace("%winner", aC + MineWars.getHandler().getWinner() + r
+                .replace("%seconds", aC + MineWar.getHandler().getCurrentCount() + r)
+                .replace("%winner", aC + MineWar.getHandler().getWinner() + r
                 );
 
 
         //Non-elegant solution to fix one PROTECTION_PHASE message
-        if(MineWars.getHandler().getCurrentCount() == 1 &! message.contains("prepare")) {
+        if(MineWar.getHandler().getCurrentCount() == 1 &! message.contains("prepare")) {
             message = message.replace("seconds", "second");
         }
 

@@ -1,16 +1,16 @@
-package com.teqless.minewars.listeners;
+package com.teqless.minewar.listeners;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameHandler;
-import com.teqless.minewars.game.GameState;
-import com.teqless.minewars.items.ChestManager;
-import com.teqless.minewars.items.ItemBuilder;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.items.ChestManager;
+import com.teqless.minewar.items.GUIBuilder;
+import com.teqless.minewar.items.ItemBuilder;
+import com.teqless.minewar.teams.User;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
@@ -35,20 +35,40 @@ public class InteractListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getClickedInventory();
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
         User user = handler.getUser(player.getUniqueId());
 
+        if(event.getCurrentItem() != null) {
+            if(event.getCurrentItem().getType().equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
+                event.setCancelled(true);
+            }
+        }
+
+        if(event.getCursor() != null) {
+            if(event.getCursor().getType().equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
+                event.setCancelled(true);
+            }
+        }
 
         if(inventory == player.getInventory()) {
+
             if(state == GameState.LOBBY || state == GameState.POST_GAME || user.isSpectating()) {
                 event.setCancelled(true);
             }
-            if(event.getCursor() != null) {
-                if(event.getCursor().getType().equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
-                    event.setCancelled(true);
-                }
+
+        } else {
+
+            String title = player.getOpenInventory().getTitle();
+
+            if(title.contains("Shop")) {
+                event.setCancelled(true);
             }
+
+            if(title.contains("Spectator")) {
+                event.setCancelled(true);
+            }
+
         }
 
     }
@@ -61,23 +81,35 @@ public class InteractListener implements Listener {
         ItemStack inHand = inventory.getItemInMainHand();
         Material material = inHand.getType();
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
+        User user = handler.getUser(player.getUniqueId());
 
         if(material.equals(ItemBuilder.HUB_ITEM_MATERIAL)) {
             //TODO: coordinate command functionality of Server core plugin
             player.performCommand("hub");
+            event.setCancelled(true);
         }
 
-        if(state == GameState.LOBBY || state == GameState.POST_GAME
-                || material.equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
+        if(material.equals(ItemBuilder.SPECTATOR_ITEM_MATERIAL) && user.isSpectating()) {
+            GUIBuilder.buildSpectatorGUI(player);
+            event.setCancelled(true);
+        }
+
+        if(material.equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
+            GUIBuilder.buildShopGUI(user);
+            event.setCancelled(true);
+        }
+
+        if(state == GameState.LOBBY || state == GameState.POST_GAME) {
             event.setCancelled(true);
         }
 
         if(event.getClickedBlock() != null) {
-
             event.setCancelled(true);
-            if(MineWars.getHandler().getUser(player.getUniqueId()).isSpectating()) return;
+
+            if(user.isSpectating() || state == GameState.LOBBY
+                    || state == GameState.POST_GAME) return;
 
             Material blockMaterial = event.getClickedBlock().getType();
 
@@ -87,15 +119,10 @@ public class InteractListener implements Listener {
                     ChestManager.openRegularChest(player, event.getClickedBlock().getLocation());
                     break;
                 case ENDER_CHEST:
-                    //TODO: implement ender chest
-                    ChestManager.openRegularChest(player, event.getClickedBlock().getLocation());
+                    ChestManager.openEnderChest(player, event.getClickedBlock().getLocation());
                     break;
 
             }
-
-        }
-
-        if(event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 
         }
 
@@ -105,7 +132,7 @@ public class InteractListener implements Listener {
     public void onItemDrop(PlayerDropItemEvent event) {
 
         Player player = event.getPlayer();
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
 
         if(state == GameState.LOBBY || state == GameState.POST_GAME
@@ -120,7 +147,7 @@ public class InteractListener implements Listener {
     public void onDrop(PlayerDropItemEvent event) {
 
         Player player = event.getPlayer();
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
 
         if(state == GameState.LOBBY || state == GameState.POST_GAME
@@ -134,7 +161,7 @@ public class InteractListener implements Listener {
     public void onSwitchHands(PlayerSwapHandItemsEvent event) {
 
         Player player = event.getPlayer();
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
 
         if(state == GameState.LOBBY || state == GameState.POST_GAME

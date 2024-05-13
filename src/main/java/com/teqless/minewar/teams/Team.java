@@ -1,8 +1,8 @@
-package com.teqless.minewars.teams;
+package com.teqless.minewar.teams;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameState;
-import com.teqless.minewars.game.Messages;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.game.Messages;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -54,7 +54,7 @@ public class Team {
         } else {
             lives = 0;
             Messages.broadcastMessage(Messages.TEAM_NO_LIVES_LEFT_MESSAGE.replace("%team", getName()));
-            MineWars.getHandler().handleTeamElimination(this);
+            MineWar.getHandler().handleTeamElimination(this);
         }
 
     }
@@ -74,11 +74,11 @@ public class Team {
 
         if(members.isEmpty()) {
 
-            GameState state = MineWars.getHandler().getState();
+            GameState state = MineWar.getHandler().getState();
 
             if(state == GameState.PRE_GAME || state == GameState.IN_GAME) {
                 Messages.broadcastMessage(Messages.TEAM_NO_MEMBERS_LEFT_MESSAGE.replace("%team", getName()));
-                MineWars.getHandler().handleTeamElimination(this);
+                MineWar.getHandler().handleTeamElimination(this);
             }
 
         }

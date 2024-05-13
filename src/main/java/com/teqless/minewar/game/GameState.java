@@ -1,4 +1,4 @@
-package com.teqless.minewars.game;
+package com.teqless.minewar.game;
 
 /**
  * Defining Game States for the Plugin

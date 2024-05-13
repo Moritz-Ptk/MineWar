@@ -1,11 +1,12 @@
-package com.teqless.minewars.listeners;
+package com.teqless.minewar.listeners;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameHandler;
-import com.teqless.minewars.game.GameRules;
-import com.teqless.minewars.game.GameState;
-import com.teqless.minewars.items.InventoryHandler;
-import com.teqless.minewars.location.TeleportManager;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.game.GameRules;
+import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.items.InventoryHandler;
+import com.teqless.minewar.location.TeleportManager;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,8 +31,9 @@ public class ConnectionListener implements Listener {
         player.setExp(0);
         player.setFoodLevel(20);
         player.setInvisible(false);
+        player.setGameMode(GameMode.ADVENTURE);
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
 
         handler.addUser(player.getUniqueId());
@@ -58,7 +60,7 @@ public class ConnectionListener implements Listener {
     @EventHandler
     public void onLeave(PlayerQuitEvent event) {
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
 
         handler.removeUser(event.getPlayer().getUniqueId());

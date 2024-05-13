@@ -1,6 +1,6 @@
-package com.teqless.minewars.items;
+package com.teqless.minewar.items;
 
-import com.teqless.minewars.MineWars;
+import com.teqless.minewar.MineWar;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.PlayerInventory;
@@ -9,7 +9,7 @@ public class InventoryHandler {
 
     public static void equipOnJoin(Player player) {
 
-        switch (MineWars.getHandler().getState()) {
+        switch (MineWar.getHandler().getState()) {
 
             case LOBBY:
                 setLobbyInventory(player);
@@ -31,7 +31,7 @@ public class InventoryHandler {
         PlayerInventory inv = player.getInventory();
 
         inv.clear();
-        inv.setItem(0, ItemBuilder.createItem(Material.GOLDEN_SWORD, 1, "Sword", true));
+        inv.setItem(0, ItemBuilder.createItem(Material.GOLDEN_SWORD, 1, "§7GOLDEN SWORD", true));
         inv.setItem(8, ItemBuilder.createShopItem());
 
     }

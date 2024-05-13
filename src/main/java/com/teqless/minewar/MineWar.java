@@ -1,22 +1,18 @@
-package com.teqless.minewars;
+package com.teqless.minewar;
 
-import com.teqless.minewars.game.GameHandler;
-import com.teqless.minewars.listeners.handler.ListenerHandler;
-import com.teqless.minewars.location.LocationManager;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import com.teqless.minewar.command.CommandManager;
+import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.listeners.handler.ListenerManager;
+import com.teqless.minewar.location.LocationManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Main class, handling basic Bukkit/Spigot functions
  */
-public final class MineWars extends JavaPlugin {
+public final class MineWar extends JavaPlugin {
 
     private static GameHandler handler;
-    private static MineWars instance;
+    private static MineWar instance;
 
     @Override
     public void onEnable() {
@@ -24,7 +20,8 @@ public final class MineWars extends JavaPlugin {
         handler = new GameHandler();
         instance = this;
 
-        ListenerHandler.registerEventListeners(getServer(), this);
+        ListenerManager.registerEventListeners(getServer(), this);
+        CommandManager.registerCommands(this);
         LocationManager.initFiles();
         LocationManager.loadLocationsFromConfig();
     }
@@ -38,7 +35,7 @@ public final class MineWars extends JavaPlugin {
         return handler;
     }
 
-    public static MineWars getInstance() {
+    public static MineWar getInstance() {
         return instance;
     }
 

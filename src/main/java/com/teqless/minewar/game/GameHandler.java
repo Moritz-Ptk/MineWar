@@ -1,10 +1,10 @@
-package com.teqless.minewars.game;
+package com.teqless.minewar.game;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.items.InventoryHandler;
-import com.teqless.minewars.location.TeleportManager;
-import com.teqless.minewars.teams.Team;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.items.InventoryHandler;
+import com.teqless.minewar.location.TeleportManager;
+import com.teqless.minewar.teams.Team;
+import com.teqless.minewar.teams.User;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Sound;
@@ -124,7 +124,7 @@ public class GameHandler {
                 timer--;
             }
         };
-        task = runnable.runTaskTimer(MineWars.getInstance(), 0L, 20L);
+        task = runnable.runTaskTimer(MineWar.getInstance(), 0L, 20L);
 
     }
 
@@ -172,7 +172,7 @@ public class GameHandler {
                 timer--;
             }
         };
-        task = runnable.runTaskTimer(MineWars.getInstance(), 0L, 20L);
+        task = runnable.runTaskTimer(MineWar.getInstance(), 0L, 20L);
 
     }
 
@@ -214,7 +214,7 @@ public class GameHandler {
             }
         };
         spawnFreeze = true;
-        task = runnable.runTaskTimer(MineWars.getInstance(), 0L, 20L);
+        task = runnable.runTaskTimer(MineWar.getInstance(), 0L, 20L);
 
     }
 
@@ -245,7 +245,7 @@ public class GameHandler {
                 timer--;
             }
         };
-        task = runnable.runTaskTimer(MineWars.getInstance(), 0L, 20L);
+        task = runnable.runTaskTimer(MineWar.getInstance(), 0L, 20L);
 
     }
 

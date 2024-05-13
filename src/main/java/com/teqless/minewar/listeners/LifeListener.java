@@ -1,13 +1,13 @@
-package com.teqless.minewars.listeners;
+package com.teqless.minewar.listeners;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameHandler;
-import com.teqless.minewars.game.GameState;
-import com.teqless.minewars.game.Messages;
-import com.teqless.minewars.items.InventoryHandler;
-import com.teqless.minewars.location.TeleportManager;
-import com.teqless.minewars.teams.Team;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.game.Messages;
+import com.teqless.minewar.items.InventoryHandler;
+import com.teqless.minewar.location.TeleportManager;
+import com.teqless.minewar.teams.Team;
+import com.teqless.minewar.teams.User;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -29,7 +29,7 @@ public class LifeListener implements Listener {
 
         Player player = event.getEntity();
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
         User user = handler.getUser(player.getUniqueId());
         Team team = user.getTeam();
@@ -53,7 +53,7 @@ public class LifeListener implements Listener {
 
         Player player = event.getPlayer();
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
         User user = handler.getUser(player.getUniqueId());
 

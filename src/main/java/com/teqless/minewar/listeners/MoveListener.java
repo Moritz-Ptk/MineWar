@@ -1,9 +1,9 @@
-package com.teqless.minewars.listeners;
+package com.teqless.minewar.listeners;
 
-import com.teqless.minewars.MineWars;
-import com.teqless.minewars.game.GameHandler;
-import com.teqless.minewars.game.GameState;
-import com.teqless.minewars.teams.User;
+import com.teqless.minewar.MineWar;
+import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.teams.User;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +19,7 @@ public class MoveListener implements Listener {
         Location from = event.getFrom();
         Location to = event.getTo();
 
-        GameHandler handler = MineWars.getHandler();
+        GameHandler handler = MineWar.getHandler();
         GameState state = handler.getState();
         User user = handler.getUser(player.getUniqueId());
 

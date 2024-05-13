@@ -1,4 +1,4 @@
-package com.teqless.minewars.listeners;
+package com.teqless.minewar.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

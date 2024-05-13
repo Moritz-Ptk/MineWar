@@ -1,5 +1,7 @@
-name: MineWars
+name: MineWar
 author: Moritz Penteker
 version: '${project.version}'
-main: com.teqless.minewars.MineWars
+main: com.teqless.minewars.MineWar
 api-version: '1.20'
+commands:
+  locations:

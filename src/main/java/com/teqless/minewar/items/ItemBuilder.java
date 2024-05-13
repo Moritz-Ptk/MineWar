@@ -1,4 +1,4 @@
-package com.teqless.minewars.items;
+package com.teqless.minewar.items;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -22,13 +22,13 @@ public class ItemBuilder {
     private static final Material teamSelectorMaterial = Material.ANVIL;
     private static final String teamSelectorName = "§7Team Selector";
 
-    private static final Material spectatorItemMaterial = Material.COMPASS;
+    public static final Material SPECTATOR_ITEM_MATERIAL = Material.COMPASS;
     private static final String spectatorItemName = "§7Spectator Tool";
 
     public static final Material SHOP_ITEM_MATERIAL = Material.BREWING_STAND;
-    private static final String shopItemName = "§6Shop";
+    private static final String shopItemName = "§6SHOP";
 
-    private static final Material fillerItemMaterial = Material.LIGHT_GRAY_STAINED_GLASS_PANE;
+    private static final Material fillerItemMaterial = Material.GRAY_STAINED_GLASS_PANE;
 
 
     public static ItemStack createHubItem() {
@@ -39,7 +39,7 @@ public class ItemBuilder {
     }
 
     public static ItemStack createSpectatorItem() {
-        return ItemBuilder.createItem(spectatorItemMaterial, 1, spectatorItemName, true);
+        return ItemBuilder.createItem(SPECTATOR_ITEM_MATERIAL, 1, spectatorItemName, true);
     }
 
     public static ItemStack createShopItem() {
@@ -47,7 +47,7 @@ public class ItemBuilder {
     }
 
     public static ItemStack createFillerItem() {
-        return ItemBuilder.createItem(fillerItemMaterial, 1, "", true);
+        return ItemBuilder.createItem(fillerItemMaterial, 1, "§8§l[]", false);
     }
 
     public static ItemStack createItem(Material type, int amount, String name, boolean unbreakable) {
@@ -76,6 +76,14 @@ public class ItemBuilder {
         }
 
         return head;
+    }
+
+    public static ItemStack setName(ItemStack itemStack, String name) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        Objects.requireNonNull(itemMeta).setDisplayName(name);
+        itemStack.setItemMeta(itemMeta);
+
+        return itemStack;
     }
 
     public static ItemStack setDescription(ItemStack itemStack, ArrayList<String> desc) {

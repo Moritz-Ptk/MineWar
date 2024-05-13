@@ -1,6 +1,6 @@
-package com.teqless.minewars.listeners.handler;
+package com.teqless.minewar.listeners.handler;
 
-import com.teqless.minewars.listeners.*;
+import com.teqless.minewar.listeners.*;
 import org.bukkit.Server;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  * Listener Handler class, managing Spigot Event Listeners
  */
-public class ListenerHandler {
+public class ListenerManager {
 
     private static final ArrayList<Listener> eventListeners = new ArrayList<>();
 
