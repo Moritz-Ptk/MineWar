@@ -30,9 +30,11 @@ public class LifeListener implements Listener {
         Player player = event.getEntity();
 
         GameHandler handler = MineWar.getHandler();
-        GameState state = handler.getState();
         User user = handler.getUser(player.getUniqueId());
         Team team = user.getTeam();
+
+        user.setKillstreak(0);
+        player.setLevel(0);
 
         Messages.sendMessage(user, Messages.DEATH_MESSAGE, false);
         team.reduceLives();
@@ -45,7 +47,10 @@ public class LifeListener implements Listener {
 
         }
 
+        event.getDrops().clear();
+        event.setDroppedExp(0);
         event.setDeathMessage(null);
+
     }
 
     @EventHandler
@@ -58,9 +63,15 @@ public class LifeListener implements Listener {
         User user = handler.getUser(player.getUniqueId());
 
         if(state == GameState.IN_GAME) {
-            InventoryHandler.setGameInventory(player);
-            TeleportManager.teleportToBase(user);
+            if(!user.isSpectating()) {
+                InventoryHandler.setGameInventory(player);
+                event.setRespawnLocation(TeleportManager.getBase(user));
+            } else {
+                InventoryHandler.setSpectatorInventory(player);
+                event.setRespawnLocation(TeleportManager.getSpawn());
+            }
         } else {
+            TeleportManager.teleportToLobby(player);
             InventoryHandler.setPostGameInventory(player);
         }
 

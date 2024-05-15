@@ -2,16 +2,20 @@ package com.teqless.minewar.listeners;
 
 import com.teqless.minewar.MineWar;
 import com.teqless.minewar.game.GameHandler;
+import com.teqless.minewar.game.GameRules;
 import com.teqless.minewar.game.GameState;
+import com.teqless.minewar.game.Messages;
 import com.teqless.minewar.items.ChestManager;
 import com.teqless.minewar.items.GUIBuilder;
 import com.teqless.minewar.items.ItemBuilder;
 import com.teqless.minewar.teams.User;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,6 +23,10 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.SkullMeta;
+
+import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Class for dealing with all Item related Events
@@ -26,6 +34,11 @@ import org.bukkit.inventory.PlayerInventory;
 public class InteractListener implements Listener {
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent event) {
         event.setCancelled(true);
     }
 
@@ -45,12 +58,6 @@ public class InteractListener implements Listener {
             }
         }
 
-        if(event.getCursor() != null) {
-            if(event.getCursor().getType().equals(ItemBuilder.SHOP_ITEM_MATERIAL)) {
-                event.setCancelled(true);
-            }
-        }
-
         if(inventory == player.getInventory()) {
 
             if(state == GameState.LOBBY || state == GameState.POST_GAME || user.isSpectating()) {
@@ -62,11 +69,54 @@ public class InteractListener implements Listener {
             String title = player.getOpenInventory().getTitle();
 
             if(title.contains("Shop")) {
+
                 event.setCancelled(true);
+
+                if(event.getCurrentItem() != null) {
+
+                    Material type = event.getCurrentItem().getType();
+
+                    if(type == Material.SPLASH_POTION) {
+
+                        if(user.getPoints() >= GameRules.POTION_COST) {
+                            player.getInventory().addItem(ItemBuilder.setDescription(event.getCurrentItem(), new ArrayList<>()));
+                            user.removePoints(GameRules.POTION_COST);
+                            Messages.sendMessage(user, Messages.POTION_PURCHASE, false);
+                            player.closeInventory();
+                        } else {
+                            Messages.sendMessage(user, Messages.NOT_ENOUGH_POINTS, false);
+                        }
+
+                    }
+
+                }
+
             }
 
             if(title.contains("Spectator")) {
+
                 event.setCancelled(true);
+
+                if(event.getCurrentItem() != null) {
+
+                    if(event.getCurrentItem().getType().equals(Material.PLAYER_HEAD)) {
+
+                        SkullMeta meta = (SkullMeta) event.getCurrentItem().getItemMeta();
+
+                        assert meta != null;
+                        if(meta.getOwningPlayer() != null) {
+
+                            OfflinePlayer teleportTarget = meta.getOwningPlayer();
+
+                            if (teleportTarget.isOnline()) {
+                                player.teleport(Objects.requireNonNull(teleportTarget.getLocation()));
+                            }
+
+                        }
+
+                    }
+
+                }
             }
 
         }
@@ -106,7 +156,6 @@ public class InteractListener implements Listener {
         }
 
         if(event.getClickedBlock() != null) {
-            event.setCancelled(true);
 
             if(user.isSpectating() || state == GameState.LOBBY
                     || state == GameState.POST_GAME) return;
@@ -117,9 +166,13 @@ public class InteractListener implements Listener {
 
                 case CHEST:
                     ChestManager.openRegularChest(player, event.getClickedBlock().getLocation());
+                    event.setCancelled(true);
                     break;
                 case ENDER_CHEST:
-                    ChestManager.openEnderChest(player, event.getClickedBlock().getLocation());
+                    event.setCancelled(true);
+                    if(state == GameState.IN_GAME) {
+                        ChestManager.openEnderChest(player, event.getClickedBlock().getLocation());
+                    }
                     break;
 
             }

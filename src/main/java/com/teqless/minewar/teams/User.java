@@ -13,9 +13,11 @@ import java.util.UUID;
 
 public class User {
 
-    private UUID uuid;
+    private final UUID uuid;
 
-    private int kills, points;
+    private int kills;
+    private int points;
+    private int killstreak;
 
     private boolean isSpectating;
 
@@ -23,6 +25,7 @@ public class User {
 
     public User(UUID uuid) {
         this.uuid = uuid;
+        this.points = 0;
     }
 
     public Player getPlayer() {
@@ -36,25 +39,28 @@ public class User {
     public int addKill() {
 
         kills += 1;
+        killstreak += 1;
 
         Player player = getPlayer();
         PlayerInventory inventory = player.getInventory();
 
-        switch (kills) {
+        player.setLevel(killstreak);
+
+        switch (killstreak) {
             case 5:
                 inventory.addItem(ItemBuilder.createItem(Material.IRON_SWORD,
-                        1, "Sword - 5 Kills", true));
+                        1, "§7IRON SWORD - 5 Kills", true));
                 break;
             case 7:
                 Messages.sendMessage(this, Messages.KILL_STREAK_MESSAGE, true);
 
                 inventory.setChestplate(ItemBuilder.createItem(Material.IRON_CHESTPLATE,
-                        1, "Chestplate - 7 Kills", true));
+                        1, "§7IRON CHESTPLATE - 7 Kills", true));
                 break;
             case 10:
                 Messages.sendMessage(this, Messages.KILL_STREAK_MESSAGE, true);
                 inventory.addItem(ItemBuilder.createItem(Material.DIAMOND_SWORD,
-                        1, "Sword - 10 Kills", true));
+                        1, "§bDIAMOND SWORD - 10 Kills", true));
                 break;
         }
 
@@ -125,6 +131,14 @@ public class User {
 
     public int getPoints() {
         return points;
+    }
+
+    public int getKillstreak() {
+        return killstreak;
+    }
+
+    public void setKillstreak(int killstreak) {
+        this.killstreak = killstreak;
     }
 
 }

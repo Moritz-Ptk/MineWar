@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class LocationManager {
 
     private static HashMap<String, Location> locations = new HashMap<>();
-
     private static final File file = new File("plugins/MineWar", "locations.yml");
     private static final FileConfiguration config = YamlConfiguration.loadConfiguration(file);
     private static final Location defaultLocation = Bukkit.getServer().getWorlds().get(0).getSpawnLocation();
@@ -54,7 +53,7 @@ public class LocationManager {
 
         Location location = defaultLocation;
 
-        if(config.contains(name+ ".world")) {
+        if(config.contains(name + ".world")) {
 
             World world = Bukkit.getWorld(Objects.requireNonNull(config.getString(name + ".world")));
 

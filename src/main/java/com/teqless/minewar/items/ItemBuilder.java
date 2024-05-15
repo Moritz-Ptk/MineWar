@@ -1,11 +1,14 @@
 package com.teqless.minewar.items;
 
+import com.teqless.minewar.game.GameRules;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.potion.PotionEffect;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -69,6 +72,7 @@ public class ItemBuilder {
         SkullMeta meta = (SkullMeta) head.getItemMeta();
 
         Objects.requireNonNull(meta).setOwningPlayer(player);
+        meta.setDisplayName("§7" + player.getName());
         head.setItemMeta(meta);
 
         if(desc != null) {
@@ -76,6 +80,23 @@ public class ItemBuilder {
         }
 
         return head;
+    }
+
+    public static ItemStack createSplashPotion(PotionEffect effect, String name) {
+
+        ItemStack potion = new ItemStack(Material.SPLASH_POTION, 1);
+        PotionMeta meta = (PotionMeta) potion.getItemMeta();
+
+        meta.addCustomEffect(effect, true);
+        meta.setDisplayName(name);
+        potion.setItemMeta(meta);
+
+        ArrayList<String> desc = new ArrayList<>();
+        desc.add("§7Cost: §6" + GameRules.POTION_COST + " §7points");
+
+        potion = setDescription(potion, desc);
+
+        return potion;
     }
 
     public static ItemStack setName(ItemStack itemStack, String name) {

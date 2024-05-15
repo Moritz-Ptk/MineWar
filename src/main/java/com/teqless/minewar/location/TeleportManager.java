@@ -30,14 +30,16 @@ public class TeleportManager {
     }
 
     public static void teleportToLobby(User user) {
-        Location lobby = LocationManager.getLocation("Lobby");
-        user.getPlayer().teleport(lobby);
+        teleportToLobby(user.getPlayer());
     }
 
-    public static void teleportToBase(User user) {
+    public static Location getBase(User user) {
         Team team = user.getTeam();
-        Location base = LocationManager.getLocation(team.getName());
-        user.getPlayer().teleport(base);
+        return LocationManager.getLocation(team.getName());
+    }
+
+    public static Location getSpawn() {
+        return LocationManager.getLocation("Spawn_0");
     }
 
 }

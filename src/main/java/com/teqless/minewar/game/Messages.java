@@ -14,7 +14,7 @@ public class Messages {
     //Reset code, abbreviated for format
     private static final String r = "§7";
 
-    public static final String KILL_STREAK_MESSAGE = "You are on a %kills kill killstreak!";
+    public static final String KILL_STREAK_MESSAGE = "You are on a %killstreak kill killstreak!";
     public static final String LOBBY_COUNTDOWN_MESSAGE = "The match starts in %seconds seconds.";
     public static final String STOP_COUNTDOWN_MESSAGE = "The server stops in %seconds seconds.";
 
@@ -34,9 +34,15 @@ public class Messages {
             "remaining players.";
     public static final String TEAM_WIN_MESSAGE = "Team %winner has won the game! Congratulations!";
     public static final String KILL_MESSAGE = "You killed "+ aC + "%victim" + r + ".";
-    public static final String DEATH_MESSAGE = "You have been killed by %killer.";
+    public static final String DEATH_MESSAGE = "You were killed by %killer.";
     public static final String RECEIVE_POINTS_MESSAGE = "You received "+ aC + "%points" + r + " points.";
     public static final String NO_PERMISSION = aC + "You don't have permission to do this.";
+
+    public static final String POTION_PURCHASE = "You purchased a potion. You now have %points points left to spend.";
+
+    public static final String NOT_ENOUGH_POINTS = "§cYou do not have enough points to purchase this item.";
+
+
     public static final String SYNTAX_ERROR = aC + "Invalid syntax. Please look up the correct way to use this " +
             "command by typing /[command] help";
 
@@ -49,6 +55,8 @@ public class Messages {
         message = prefix + message
                 .replace("%player", aC + player.getName()+ r)
                 .replace("%kills", aC + user.getKills()+ r)
+                .replace("%killstreak", aC + user.getKillstreak()+ r)
+                .replace("%points", aC + user.getPoints()+ r)
                 .replace("%seconds", aC + MineWar.getHandler().getCurrentCount() + r)
                 .replace("%winner", aC + MineWar.getHandler().getWinner() + r
                 );

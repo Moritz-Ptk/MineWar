@@ -2,14 +2,15 @@ package com.teqless.minewar.game;
 
 import com.teqless.minewar.MineWar;
 import com.teqless.minewar.items.InventoryHandler;
+import com.teqless.minewar.location.LocationManager;
 import com.teqless.minewar.location.TeleportManager;
 import com.teqless.minewar.teams.Team;
 import com.teqless.minewar.teams.User;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -20,8 +21,8 @@ public class GameHandler {
     private GameState state;
     private int currentCount;
 
-    private ArrayList<Team> teams;
-    private ArrayList<User> users;
+    private final ArrayList<Team> teams;
+    private final ArrayList<User> users;
 
     private BukkitTask task;
 
@@ -55,16 +56,22 @@ public class GameHandler {
 
         List<Team> teamsAlive = new ArrayList<>();
         teams.forEach(aliveTeam -> {
-            if(aliveTeam.getSize() > 0) teamsAlive.add(team);
+            if(aliveTeam.getLives() > 0 && aliveTeam.getSize() > 0) {
+                teamsAlive.add(aliveTeam);
+            } else {
+                teamsAlive.remove(aliveTeam);
+            }
         });
 
         if(teamsAlive.size() > 1) {
+
             if(team.getSize() > 0) {
                 team.getMembers().forEach(user -> {
                     user.setSpectating();
                     Messages.sendMessage(user, Messages.OWN_TEAM_LOST_MESSAGE, false);
                 });
             }
+
         } else {
 
             cancelTask();
@@ -93,7 +100,10 @@ public class GameHandler {
                 user.removeSpectatorStatus();
             }
             TeleportManager.teleportToLobby(user);
+            InventoryHandler.setPostGameInventory(user.getPlayer());
         });
+
+        spawnVictoryFirework(winningTeam);
 
         BukkitRunnable runnable = new BukkitRunnable() {
             /**
@@ -249,13 +259,47 @@ public class GameHandler {
 
     }
 
+    private void spawnVictoryFirework(Team winningTeam) {
+
+        Location location = LocationManager.getLocation("Lobby");
+        Firework firework = Objects.requireNonNull(location.getWorld()).spawn(location, Firework.class);
+        FireworkMeta fireworkMeta = firework.getFireworkMeta();
+        Color color;
+
+        switch (winningTeam.getName()) {
+
+            case "Diamond":
+                color = Color.fromRGB(185, 242, 255);
+                break;
+            case "Gold":
+                color = Color.fromRGB(212, 175, 55);
+                break;
+            case "Emerald":
+                color = Color.fromRGB(0, 208, 98);
+                break;
+            default:
+                color = Color.RED;
+        }
+
+        fireworkMeta.addEffect(FireworkEffect.builder()
+                .flicker(true)
+                .trail(true)
+                .with(FireworkEffect.Type.BALL_LARGE)
+                .withColor(color).build());
+
+        fireworkMeta.setPower(1);
+        firework.setFireworkMeta(fireworkMeta);
+    }
+
     private void distributeUsers() {
 
         Random random = new Random();
         ArrayList<User> unassignedUsers = new ArrayList<>();
 
         users.forEach(user -> {
-            if(user.getTeam() == null) unassignedUsers.add(user);
+            if(user.getTeam() == null) {
+                unassignedUsers.add(user);
+            }
         });
 
         //Ensure certain size of team, dictated by amount of teams
@@ -314,10 +358,6 @@ public class GameHandler {
         return state;
     }
 
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
     public void addUser(UUID uuid) {
 
         User user = new User(uuid);
@@ -348,14 +388,6 @@ public class GameHandler {
 
     public ArrayList<Team> getTeams() {
         return teams;
-    }
-
-    public Team getTeam(int index) {
-        return teams.get(index);
-    }
-
-    public Team getTeam(String name) {
-        return teams.stream().filter(team -> team.getName().equals(name)).findAny().get();
     }
 
     public int getCurrentCount() {

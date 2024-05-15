@@ -9,11 +9,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Team {
 
-    private String name;
+    private final String name;
 
     private int lives;
 
-    private ArrayList<User> members;
+    private final ArrayList<User> members;
 
     public Team(String name) {
 
@@ -29,7 +29,7 @@ public class Team {
 
         AtomicInteger points = new AtomicInteger(10);
         members.forEach(teamMate -> {
-            if(teamMate.getUUID() != user.getUUID()) {
+            if(teamMate.getUUID() != user.getUUID() && teamMate.getTeam().equals(user.getTeam())) {
                 teamMate.addPoints(1);
                 points.getAndDecrement();
             }
